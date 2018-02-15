@@ -25,6 +25,11 @@ aplicaOperacion a b c =
 		'd' -> b `div` c
 		'e' -> b^c
 
+--Recibe un entero y devuelve la aproximación entera a su raíz cuadrada.
+raizEntera:: Int -> Int
+raizEntera r =
+	round ( sqrt (fromIntegral r))
+
 --Definimos la función power para sacar la potencia de un número.
 power :: Int -> Int -> Int
 power n 0 = 1
