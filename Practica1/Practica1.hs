@@ -36,28 +36,35 @@ sumaNat 1 = 1
 sumaNat n = n + sumaNat (n- 1)
 
 tribonaccies:: Int -> [Int]
+tribonaccies n = []
 --TODO
 
 eliminaDup:: [a] -> [a]
+eliminaDup ls = ls
 --TODO
 
+--PUNTO 8
+--Una función que recibe una lista y devuelve la misma pero en el orden inverso.
 reversa :: [a] -> [a]
---TODO
+reversa [] = []
+reversa (x : xs) = reversa xs ++ [x]
 
+--Una función que recibe una lista y devuelve a los elementos de la lista que
+--cumplen el predicado recibido (filter).
 filtra :: (a -> Bool) -> [a] -> [a]
---TODO
+filtra predicado []  = []	
+filtra predicado [x] = if predicado x then [x] else []
+filtra predicado (x : xs) = if predicado x 
+							then ([x] ++ filtra predicado xs)
+							else (filtra predicado xs)
 
 apariciones :: [a] -> [(Int,a)]
+apariciones ls = [(1,head ls)]
 --TODO
 
---Definimos la función power para sacar la potencia de un número.
-power :: Int -> Int -> Int
-power n 0 = 1
-power n 1 = n
-power n m = n * (power n (m-1))
-
+--PUNTO 9
 --Lista [0, 1, 3, 7, 15, 31, 63]
-lista1 = [(power 2 x) - 1 | x <- [0..6]]
+lista1 = [(2^x) - 1 | x <- [0..6]]
 
 --Lista [(3, 4),(7, 8),(11, 12),(15, 16), ...]
-lista2 = [((x-1), x) | x <- [1..], x*4]
+lista2 = [((x-1),x) | x <- [4,8..]]
