@@ -24,3 +24,17 @@ aplicaOperacion a b c =
 		'p' -> b*c
 		'd' -> b `div` c
 		'e' -> b^c
+
+--Definimos la función power para sacar la potencia de un número.
+power :: Int -> Int -> Int
+power n 0 = 1
+power n 1 = n
+power n m = n * (power n (m-1))
+
+--lista [0, 1, 3, 7, 15, 31, 63]
+lista1 :: [Int]
+lista1 = [(power 2 x) - 1 | x <- [0..6]]
+
+--lista [(3, 4),(7, 8),(11, 12),(15, 16), ...]
+lista2 :: [Int]
+lista2 = [((x-1), x), | x <- [1..], x*4]
