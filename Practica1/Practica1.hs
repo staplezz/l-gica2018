@@ -111,4 +111,4 @@ lista2 = [((x-1),x) | x <- [4,8..]]
 
 --Fin práctica 1.
 --Cortés López Jorge Francisco	314330981	kokofrank@ciencias.unam.mx
---López Arias Víctor Ulises	 	310173335	ulises.lopez@ciencias.unam.mx
+--López Arias Víctor ulises		310173335	ulises.lopez@ciencias.unam.mx
