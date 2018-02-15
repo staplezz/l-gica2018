@@ -1,4 +1,4 @@
---Practica 01
+--Practica 1
 --Lógica Computacional 2018.
 
 --Evalúa a b c x en la derivada de ax^2+bx+c.
@@ -34,6 +34,21 @@ raizEntera r =
 sumaNat:: Int -> Int
 sumaNat 1 = 1
 sumaNat n = n + sumaNat (n- 1)
+
+tribonaccies:: Int -> [Int]
+--TODO
+
+eliminaDup:: [a] -> [a]
+--TODO
+
+reversa :: [a] -> [a]
+--TODO
+
+filtra :: (a -> Bool) -> [a] -> [a]
+--TODO
+
+apariciones :: [a] -> [(Int,a)]
+--TODO
 
 --Definimos la función power para sacar la potencia de un número.
 power :: Int -> Int -> Int
