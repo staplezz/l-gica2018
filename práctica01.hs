@@ -30,6 +30,11 @@ raizEntera:: Int -> Int
 raizEntera r =
 	round ( sqrt (fromIntegral r))
 
+--Recibe un entero n y devuelve la suma de los primeros n números naturales
+sumaNat:: Int -> Int
+sumaNat 1 = 1
+sumaNat n = n + sumaNat (n- 1)
+
 --Definimos la función power para sacar la potencia de un número.
 power :: Int -> Int -> Int
 power n 0 = 1
