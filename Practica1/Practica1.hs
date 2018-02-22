@@ -30,8 +30,12 @@ aplicaOperacion a b c =
 
 --PUNTO 4
 --Recibe un entero y devuelve la aproximación entera a su raíz cuadrada.
-raizEntera:: Int -> Int
-raizEntera r = round ( sqrt (fromIntegral r))
+raizEntera :: Int -> Int
+raizEntera n = aux n
+  where
+    aux x
+      | x*x > n = aux (x - 1)
+      | otherwise = x
 
 --PUNTO 5,6
 --Recibe un entero n y devuelve la suma de los primeros n números naturales
