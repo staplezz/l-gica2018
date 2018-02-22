@@ -40,7 +40,6 @@ raizEntera n = aux n
 --PUNTO 5,6
 --Recibe un entero n y devuelve la suma de los primeros n números naturales
 sumaNat:: Int -> Int
-sumaNat 0 = 0
 sumaNat n = (n*(n+1)) `div` 2
 
 --PUNTO 7
