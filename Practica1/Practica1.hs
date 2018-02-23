@@ -58,18 +58,15 @@ tribonacciesAux n = tribonacciesAux (n-3) +
 
 --Función que recibe una lista y elimina los duplicados adyacentes de la lista,
 --dejando una presencia de cada elemento contiguo.
-eliminaDup:: [a] -> [a]
-eliminaDup ls = ls --Esto se borra
-{-
+eliminaDup:: (Eq a) => [a] -> [a]
 eliminaDup ls = eliminaDupAux ls
 
 eliminaDupAux:: Eq a => [a] -> [a]
 eliminaDupAux []		= 	[]
 eliminaDupAux [x]		= 	[x]
 eliminaDupAux (x:y:zs)	= 	if (x == y)
-							then eliminaDupAux (x:zs)
-							else [x] ++ eliminaDupAux (y:zs)
--}
+							then eliminaDupAux(x:zs)
+							else x:eliminaDupAux(y:zs)
 
 --PUNTO 8
 --Una función que recibe una lista y devuelve la misma pero en el orden inverso.
@@ -90,21 +87,20 @@ filtra predicado (x : xs) = if predicado x
 
 --Función que recibe una lista y devuelve una lista con pares ordenados (k, x),
 --donde k es el máximo número de apariciones consecutivas del elemento x.
-apariciones :: [a] -> [(Int,a)]
-apariciones ls = [] --Esto se borra
---TODO
-{-
-apariciones lista = cuenta lista 1
+apariciones :: (Eq a) => [a] -> [(Int,a)]
+apariciones lista = quita (cuenta lista []) []
 
-cuenta :: [a] -> Int -> [(Int,a)]
-cuenta [] n = []
-cuenta [x:y:ls] n = if (x == y)
-          then cuenta (y:ls) (n+1)
-          else (n,x) : (cuenta (y:ls) 1)
-cuenta [x] n = [(n,x)]
--}
+cuenta :: (Eq a) => [a] -> [(Int,a)] -> [(Int,a)]
+cuenta [] resultado = resultado
+cuenta (x:xs) [] = cuenta xs [(1,x)]
+cuenta (x:xs) ((i,a):ys) = if x == a then
+                                cuenta xs ((i+1,a):ys)
+                            else
+                                cuenta xs ((1,x):((i,a):ys))
 
-
+quita :: (Eq a) => [(Int,a)] -> [(Int,a)] -> [(Int,a)]
+quita [] sal = sal 
+quita ((i,a):ls) sal = quita (filtra(\(j,b) -> b /= a) ((i,a):ls)) [maximum ((i,a):ls)]++sal
 --PUNTO 9
 --Lista [0, 1, 3, 7, 15, 31, 63]
 lista1 = [(2^x) - 1 | x <- [0..6]]
@@ -115,4 +111,3 @@ lista2 = [((x-1),x) | x <- [4,8..]]
 --Fin práctica 1.
 --Cortés López Jorge Francisco	314330981	kokofrank@ciencias.unam.mx
 --López Arias Víctor ulises		310173335	ulises.lopez@ciencias.unam.mx
-    
