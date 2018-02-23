@@ -29,6 +29,7 @@ infixl 8 :<=>:
 varList :: Formula -> [Var]
 varList F = [] --Creado para compilar.
 
+
 -- PUNTO 2
 -- Función que recibe una fórmula y devuelve su negación.
 negacion :: Formula -> Formula
