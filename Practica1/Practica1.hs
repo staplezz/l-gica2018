@@ -88,8 +88,9 @@ filtra predicado (x : xs) = if predicado x
 --Función que recibe una lista y devuelve una lista con pares ordenados (k, x),
 --donde k es el máximo número de apariciones consecutivas del elemento x.
 apariciones :: (Eq a) => [a] -> [(Int,a)]
-apariciones lista = quita (cuenta lista []) []
+apariciones lista = quita [] ( reversa (cuenta lista []))
 
+--Cuenta repeticiones cotinuas de un elemento y lo guarda en duplas.
 cuenta :: (Eq a) => [a] -> [(Int,a)] -> [(Int,a)]
 cuenta [] resultado = resultado
 cuenta (x:xs) [] = cuenta xs [(1,x)]
@@ -98,9 +99,19 @@ cuenta (x:xs) ((i,a):ys) = if x == a then
                             else
                                 cuenta xs ((1,x):((i,a):ys))
 
+--Quita las aparaciones menores de una dupla con contador como 1er elemento. 
 quita :: (Eq a) => [(Int,a)] -> [(Int,a)] -> [(Int,a)]
-quita [] sal = sal 
-quita ((i,a):ls) sal = quita (filtra(\(j,b) -> b /= a) ((i,a):ls)) [maximum ((i,a):ls)]++sal
+quita sal [] = reversa sal
+quita sal ((i,a):ls) = quita ((n,a):sal) (filtra (\(j,b) -> b/=a) ((i,a):ls))
+    where n = maximo (filtra(\(j,b) -> b==a) ls) i
+    
+--De una lista de duplas, nos da el numero más grande en la primer entrada.
+maximo :: [(Int,a)] -> Int -> Int
+maximo [] n = n
+maximo ((i,a):ls) n =  if i>n then
+                        maximo ls i
+                    else
+                        maximo ls n
 --PUNTO 9
 --Lista [0, 1, 3, 7, 15, 31, 63]
 lista1 = [(2^x) - 1 | x <- [0..6]]
@@ -109,5 +120,6 @@ lista1 = [(2^x) - 1 | x <- [0..6]]
 lista2 = [((x-1),x) | x <- [4,8..]]
 
 --Fin práctica 1.
---Cortés López Jorge Francisco	314330981	kokofrank@ciencias.unam.mx
---López Arias Víctor ulises		310173335	ulises.lopez@ciencias.unam.mx
+--Cortés López Jorge Francisco  314330981   kokofrank@ciencias.unam.mx
+--López Arias Víctor Ulises     310173335   ulises.lopez@ciencias.unam.mx
+--Sainz Takata Izumi María      314245195   sainz@ciencias.unam.mx
