@@ -7,15 +7,16 @@
 
 --Definiciones
 --Tipo para las variables proposicionales.
-data Var = A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z deriving (Show, Eq, Ord)
+data Var = A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z 
+    deriving (Show, Eq, Ord)
 
 --Tipo para las formulas proposicionales.
 data Formula = Prop Var
-|Neg Formula
-|Formula :&: Formula
-|Formula :|: Formula
-|Formula :=>: Formula
-|Formula :<=>: Formula deriving (Show, Eq, Ord)
+    |Neg Formula
+    |Formula :&: Formula
+    |Formula :|: Formula
+    |Formula :=>: Formula
+    |Formula :<=>: Formula deriving (Show, Eq, Ord)
 
 -- Precedencia y asociatividad.
 infixl 9 :&:
@@ -27,7 +28,7 @@ infixl 8 :<=>:
 -- Función recursiva que recibe una fórmula y devuelve el conjunto de variables
 -- que hay en la fórmula.
 varList :: Formula -> [Var]
-varList F = [] --Creado para compilar.
+varList proposicion = [] --Creado para compilar.
 
 -- PUNTO 2
 -- Función que recibe una fórmula y devuelve su negación.
@@ -51,15 +52,15 @@ sustituye proposicion lista = proposicion --Creado para compilar.
 -- variables con estados (True y False) y evalua la fórmula asignando el estado 
 -- que le corresponde a cada variable.
 interp :: Formula -> [(Var,Bool)] -> Bool
-interp proposicion lista = proposicion --Creado para compilar.
+interp proposicion lista = False --Creado para compilar.
 
 -- PUNTO 6
--- Función que recibe una fórmula y devuelve la fórmula en Forma normal negativa.
+-- Función que recibe una fórmula y la devuelve en Forma normal negativa.
 fnn:: Formula -> Formula
 fnn proposicion = proposicion --Creado para compilar.
 
 -- PUNTO 7
--- Función que recibe una fórmula y devuelve la fórmula en Forma normal conjuntiva.
+-- Función que recibe una fórmula y la devuelve en Forma normal conjuntiva.
 fnc:: Formula -> Formula
 fnc proposicion = proposicion --Creado para compilar.
 
