@@ -1,9 +1,9 @@
 -- Practica2.hs - v1.0                                                        --
-{-                           Lógica Computacional                             --
+--                           Lógica Computacional                             --
 --                    Facultad de Ciencias, UNAM, 2018-2                      --
 --                      Todos los derechos reservados.                        --
 --                                                                            --
---                 Práctica 2: Tipos y lógica proposicional                   -}
+--                 Práctica 2: Tipos y lógica proposicional                   --
 
 --Definiciones
 --Tipo para las variables proposicionales.
