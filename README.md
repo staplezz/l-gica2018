@@ -1,3 +1,3 @@
-# l-gica2018
-Prácticas de laboratorio: Lógica Computacional 2018.
-Facultad de Ciencias. UNAM. Ciencias de la Computación.
+Cortés López Jorge Francisco  314330981   kokofrank@ciencias.unam.mx
+López Arias Víctor Ulises     310173335   ulises.lopez@ciencias.unam.mx
+Sainz Takata Izumi María      314245195   sainz@ciencias.unam.mx
