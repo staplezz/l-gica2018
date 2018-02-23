@@ -105,7 +105,7 @@ quita sal [] = reversa sal
 quita sal ((i,a):ls) = quita ((n,a):sal) (filtra (\(j,b) -> b/=a) ((i,a):ls))
     where n = maximo (filtra(\(j,b) -> b==a) ls) i
     
---De una lista de duplas, nos da el numero más grande en la primer entrada.
+--De una lista de duplas, nos da el número más grande en la primer entrada.
 maximo :: [(Int,a)] -> Int -> Int
 maximo [] n = n
 maximo ((i,a):ls) n =  if i>n then
