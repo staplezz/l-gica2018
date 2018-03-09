@@ -124,9 +124,9 @@ fnn formula = equivalencia formula
 -- Función auxiliar que distribuye conjunciones.
 distriDisyun:: Formula -> Formula -> Formula
 distriDisyun (alfa :&: beta) gamma = (distriDisyun alfa gamma) :&:
-                                    (distriDisyun beta gamma)
+                                     (distriDisyun beta gamma)
 distriDisyun alfa (beta :&: gamma) = (distriDisyun alfa beta) :&:
-                                    (distriDisyun alfa gamma)
+                                     (distriDisyun alfa gamma)
 distriDisyun alfa beta = alfa :|: beta
 
 -- Función auxilar de fnc que realmente hace todo.
