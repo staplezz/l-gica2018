@@ -139,6 +139,7 @@ auxFnc formula = formula
 fnc:: Formula -> Formula
 fnc formula = auxFnc (equivalencia formula)
 
+--------------------------------------------------------------------------------
 -- Fin Practica2.hs                                                           --
 --                                                                            --
 -- Cortés López Jorge Francisco  314330981   kokofrank@ciencias.unam.mx       --
