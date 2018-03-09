@@ -95,7 +95,19 @@ busca p ((x,y):zs) = if (p == x)
 -- variables con estados (True y False) y evalua la fórmula asignando el estado 
 -- que le corresponde a cada variable.
 interp :: Formula -> [(Var,Bool)] -> Bool
-interp proposicion lista = False --Creado para compilar.
+interp (Prop p) l = buscaValor p l
+interp (Neg formula) l = not (interp formula l)
+interp (for1 :=>:  for2) l = (not (interp for1 l)) || (interp for2 l)
+interp (for1 :<=>: for2) l = (interp (for1 :=>: for2) l) == 
+                             (interp (for2 :=>: for1) l)
+interp (for1 :&: for2) l = (interp for1 l) && (interp for2 l)
+interp (for1 :|: for2) l = (interp for1 l) || (interp for2 l)
+
+buscaValor :: Var -> [(Var,Bool)] -> Bool
+buscaValor prop [] = error "No todas las variables estan definidas"
+buscaValor prop ((var, b):ys)
+    | prop == var = b
+    | otherwise = buscaValor prop ys
 
 -- PUNTO 6
 -- Función que recibe una fórmula y la devuelve en Forma normal negativa.
@@ -113,8 +125,10 @@ auxFnc (for1 :|: for2) = distriDisyun (auxFnc for1) (auxFnc for2)
 auxFnc formula = formula
 
 distriDisyun:: Formula -> Formula -> Formula
-distriDisyun (for1 :&: for2) for3 = (distriDisyun for1 for3) :&: (distriDisyun for2 for3)
-distriDisyun for1 (for2 :&: for3) = (distriDisyun for1 for2) :&: (distriDisyun for1 for3)
+distriDisyun (for1 :&: for2) for3 = (distriDisyun for1 for3) :&:
+                                    (distriDisyun for2 for3)
+distriDisyun for1 (for2 :&: for3) = (distriDisyun for1 for2) :&:
+                                    (distriDisyun for1 for3)
 distriDisyun for1 for2 = for1 :|: for2
 
 -- Fin Practica2.hs                                                           --
