@@ -65,10 +65,12 @@ negacion formula = negacion (equivalencia formula)
 -- Función que recibe una fórmula y elimina implicaciones y equivalencias.
 equivalencia :: Formula -> Formula
 equivalencia (Neg formula) = negacion formula
-equivalencia (for1 :=>:  for2) = (negacion for1 :|: equivalencia for2)
-equivalencia (for1 :<=>: for2) = (negacion for1 :|: equivalencia for2) :&: 
-                                 (negacion for2 :|: equivalencia for1)
-equivalencia formula = formula
+equivalencia (for1 :|:   for2) = (equivalencia for1) :|: (equivalencia for2)
+equivalencia (for1 :&:   for2) = (equivalencia for1) :&: (equivalencia for2)
+equivalencia (for1 :=>:  for2) = ((negacion for1) :|: (equivalencia for2))
+equivalencia (for1 :<=>: for2) = ((negacion for1) :|: (equivalencia for2)) :&: 
+                                 ((negacion for2) :|: (equivalencia for1))
+equivalencia formula =  formula
 
 -- PUNTO 4
 -- Función recursiva que recibe una fórmula proposicional y una lista de parejas
@@ -106,18 +108,14 @@ fnc:: Formula -> Formula
 fnc formula = auxFnc (equivalencia formula)
 
 auxFnc:: Formula -> Formula
-auxFnc (Prop p) = Prop p
 auxFnc (for1 :&: for2) = (auxFnc for1) :&: (auxFnc for2)
 auxFnc (for1 :|: for2) = distriDisyun (auxFnc for1) (auxFnc for2)
 auxFnc formula = formula
 
 distriDisyun:: Formula -> Formula -> Formula
-distriDisyun (Prop p) (Prop q) = Prop p :|: Prop q
-distriDisyun (Neg (Prop p)) (Neg (Prop q)) = Neg (Prop p) :|: Neg (Prop q)
-distriDisyun (Prop p :|: Prop q) (Prop s) = Prop p :|: Prop q :|: Prop s
-distriDisyun (Prop s) (Prop p :|: Prop q) = Prop p :|: Prop q :|: Prop s
 distriDisyun (for1 :&: for2) for3 = (distriDisyun for1 for3) :&: (distriDisyun for2 for3)
 distriDisyun for1 (for2 :&: for3) = (distriDisyun for1 for2) :&: (distriDisyun for1 for3)
+distriDisyun for1 for2 = for1 :|: for2
 
 -- Fin Practica2.hs                                                           --
 --                                                                            --
