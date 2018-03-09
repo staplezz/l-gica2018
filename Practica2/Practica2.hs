@@ -35,8 +35,7 @@ infixr 7 :=>:
 infixl 8 :<=>:
 
 -- PUNTO 1
---Función que recibe una lista y elimina los duplicados adyacentes de la lista,
---dejando una presencia de cada elemento contiguo.
+--Función que recibe una lista y elimina los duplicados de la lista.
 eliminaDup :: (Eq a) => [a] -> [a]
 eliminaDup [] = []
 eliminaDup (x:xs) = x:eliminaDup (filter (/= x) xs)
