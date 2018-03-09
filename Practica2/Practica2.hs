@@ -35,79 +35,86 @@ infixr 7 :=>:
 infixl 8 :<=>:
 
 -- PUNTO 1
+--Función que recibe una lista y elimina los duplicados adyacentes de la lista,
+--dejando una presencia de cada elemento contiguo.
+eliminaDup :: (Eq a) => [a] -> [a]
+eliminaDup [] = []
+eliminaDup (x:xs) = x:eliminaDup (filter (/= x) xs)
+
+--  Función auxiliar de varList que realmente hace todo el trabajo
+auxVarList :: Formula -> [Var]
+auxVarList (Prop p) = [p]
+auxVarList (Neg formula) = (auxVarList formula)
+auxVarList (alfa :&:   beta) = (auxVarList alfa) ++ (auxVarList beta)
+auxVarList (alfa :|:   beta) = (auxVarList alfa) ++ (auxVarList beta)
+auxVarList (alfa :=>:  beta) = (auxVarList alfa) ++ (auxVarList beta)
+auxVarList (alfa :<=>: beta) = (auxVarList alfa) ++ (auxVarList beta)
+
 -- Función recursiva que recibe una fórmula y devuelve el conjunto de variables
 -- que hay en la fórmula.
 varList :: Formula -> [Var]
 varList (formula) = eliminaDup (auxVarList formula)
 
-auxVarList :: Formula -> [Var]
-auxVarList (Prop p) = [p]
-auxVarList (Neg fo) = (auxVarList fo)
-auxVarList (for1 :&:   for2) = (auxVarList for1) ++ (auxVarList for2)
-auxVarList (for1 :|:   for2) = (auxVarList for1) ++ (auxVarList for2)
-auxVarList (for1 :=>:  for2) = (auxVarList for1) ++ (auxVarList for2)
-auxVarList (for1 :<=>: for2) = (auxVarList for1) ++ (auxVarList for2)
-
-eliminaDup :: (Eq a) => [a] -> [a]
-eliminaDup [] = []
-eliminaDup (x:xs) = x:eliminaDup (filter (/= x) xs)
-
 -- PUNTO 2
 -- Función que recibe una fórmula y devuelve su negación.
 negacion :: Formula -> Formula
 negacion (Prop p) = Neg (Prop p)
-negacion (Neg (Prop p)) = Prop p
-negacion (for1 :|: for2) = (negacion for1) :&: (negacion for2)
-negacion (for1 :&: for2) = (negacion for1) :|: (negacion for2)
+negacion (Neg formula) = formula
+negacion (alfa :|: beta) = (negacion alfa) :&: (negacion beta)
+negacion (alfa :&: beta) = (negacion alfa) :|: (negacion beta)
 negacion formula = negacion (equivalencia formula)
 
 -- PUNTO 3
 -- Función que recibe una fórmula y elimina implicaciones y equivalencias.
 equivalencia :: Formula -> Formula
 equivalencia (Neg formula) = negacion formula
-equivalencia (for1 :|:   for2) = (equivalencia for1) :|: (equivalencia for2)
-equivalencia (for1 :&:   for2) = (equivalencia for1) :&: (equivalencia for2)
-equivalencia (for1 :=>:  for2) = ((negacion for1) :|: (equivalencia for2))
-equivalencia (for1 :<=>: for2) = ((negacion for1) :|: (equivalencia for2)) :&: 
-                                 ((negacion for2) :|: (equivalencia for1))
+equivalencia (alfa :|:   beta) = (equivalencia alfa) :|: (equivalencia beta)
+equivalencia (alfa :&:   beta) = (equivalencia alfa) :&: (equivalencia beta)
+equivalencia (alfa :=>:  beta) = ((negacion alfa) :|: (equivalencia beta))
+equivalencia (alfa :<=>: beta) = ((negacion alfa) :|: (equivalencia beta)) :&: 
+                                 ((negacion beta) :|: (equivalencia alfa))
 equivalencia formula =  formula
 
 -- PUNTO 4
--- Función recursiva que recibe una fórmula proposicional y una lista de parejas
--- de variables proposicionales. Sustituye todas las presencias de variables en 
--- la fórmula por la pareja ordenada que le corresponde en la lista.
-sustituye :: Formula -> [(Var,Var)] -> Formula
-sustituye (Prop p) l = busca p l
-sustituye (Neg formula) l = Neg (sustituye formula l)
-sustituye (for1 :&:   for2) l = (sustituye for1 l) :&:   (sustituye for2 l)
-sustituye (for1 :|:   for2) l = (sustituye for1 l) :|:   (sustituye for2 l)
-sustituye (for1 :=>:  for2) l = (sustituye for1 l) :=>:  (sustituye for2 l)
-sustituye (for1 :<=>: for2) l = (sustituye for1 l) :<=>: (sustituye for2 l)
-
+-- Función auxilar de sustituye que busca una variable en la lista y regresa 
+-- otra variable si hubo coincidencia.
 busca :: Var -> [(Var, Var)] -> Formula
 busca p [] = Prop p
 busca p ((x,y):zs) = if (p == x) 
                         then Prop y
                         else busca p zs
 
+-- Función recursiva que recibe una fórmula proposicional y una lista de parejas
+-- de variables proposicionales. Sustituye todas las presencias de variables en 
+-- la fórmula por la pareja ordenada que le corresponde en la lista.
+sustituye :: Formula -> [(Var,Var)] -> Formula
+sustituye (Prop p) l = busca p l
+sustituye (Neg formula) l = Neg (sustituye formula l)
+sustituye (alfa :&:   beta) l = (sustituye alfa l) :&:   (sustituye beta l)
+sustituye (alfa :|:   beta) l = (sustituye alfa l) :|:   (sustituye beta l)
+sustituye (alfa :=>:  beta) l = (sustituye alfa l) :=>:  (sustituye beta l)
+sustituye (alfa :<=>: beta) l = (sustituye alfa l) :<=>: (sustituye beta l)
+
 -- PUNTO 5
+-- Función auxiliar de interp que dada una variable y una lista, regresa el 
+-- valor boleano asignado a la variable en la lista.
+buscaValor :: Var -> [(Var,Bool)] -> Bool
+buscaValor prop [] = error "No todas las variables estan definidas"
+buscaValor prop ((var, b):ys)
+    | prop == var = b
+    | otherwise = buscaValor prop ys
+
 -- Función recursiva que recibe una fórmula y una lista de parejas ordenadas de
 -- variables con estados (True y False) y evalua la fórmula asignando el estado 
 -- que le corresponde a cada variable.
 interp :: Formula -> [(Var,Bool)] -> Bool
 interp (Prop p) l = buscaValor p l
 interp (Neg formula) l = not (interp formula l)
-interp (for1 :=>:  for2) l = (not (interp for1 l)) || (interp for2 l)
-interp (for1 :<=>: for2) l = (interp (for1 :=>: for2) l) == 
-                             (interp (for2 :=>: for1) l)
-interp (for1 :&: for2) l = (interp for1 l) && (interp for2 l)
-interp (for1 :|: for2) l = (interp for1 l) || (interp for2 l)
-
-buscaValor :: Var -> [(Var,Bool)] -> Bool
-buscaValor prop [] = error "No todas las variables estan definidas"
-buscaValor prop ((var, b):ys)
-    | prop == var = b
-    | otherwise = buscaValor prop ys
+interp (alfa :=>:  beta) l = (not (interp alfa l)) || (interp beta l)
+interp (alfa :<=>: beta) l = (interp (alfa :=>: beta) l) == 
+                             (interp (beta :=>: alfa) l)
+interp (alfa :&: beta) l = (interp alfa l) && (interp beta l)
+interp (alfa :|: beta) l = (interp alfa l) || (interp beta l)
 
 -- PUNTO 6
 -- Función que recibe una fórmula y la devuelve en Forma normal negativa.
@@ -115,21 +122,23 @@ fnn:: Formula -> Formula
 fnn formula = equivalencia formula
 
 -- PUNTO 7
+-- Función auxiliar que distribuye conjunciones.
+distriDisyun:: Formula -> Formula -> Formula
+distriDisyun (alfa :&: beta) for3 = (distriDisyun alfa for3) :&:
+                                    (distriDisyun beta for3)
+distriDisyun alfa (beta :&: for3) = (distriDisyun alfa beta) :&:
+                                    (distriDisyun alfa for3)
+distriDisyun alfa beta = alfa :|: beta
+
+-- Función auxilar de fnc que realmente hace todo.
+auxFnc:: Formula -> Formula
+auxFnc (alfa :&: beta) = (auxFnc alfa) :&: (auxFnc beta)
+auxFnc (alfa :|: beta) = distriDisyun (auxFnc alfa) (auxFnc beta)
+auxFnc formula = formula
+
 -- Función que recibe una fórmula y la devuelve en Forma normal conjuntiva.
 fnc:: Formula -> Formula
 fnc formula = auxFnc (equivalencia formula)
-
-auxFnc:: Formula -> Formula
-auxFnc (for1 :&: for2) = (auxFnc for1) :&: (auxFnc for2)
-auxFnc (for1 :|: for2) = distriDisyun (auxFnc for1) (auxFnc for2)
-auxFnc formula = formula
-
-distriDisyun:: Formula -> Formula -> Formula
-distriDisyun (for1 :&: for2) for3 = (distriDisyun for1 for3) :&:
-                                    (distriDisyun for2 for3)
-distriDisyun for1 (for2 :&: for3) = (distriDisyun for1 for2) :&:
-                                    (distriDisyun for1 for3)
-distriDisyun for1 for2 = for1 :|: for2
 
 -- Fin Practica2.hs                                                           --
 --                                                                            --
