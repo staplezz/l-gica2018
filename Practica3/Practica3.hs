@@ -171,13 +171,12 @@ fnc formula = auxFnc (equivalencia formula)
 separaConjunciones:: Formula -> [Formula] -> [Formula]
 separaConjunciones (Prop p)  l = (Prop p):l
 separaConjunciones (Neg  a)  l = (Neg  a):l
-separaConjunciones (a :|: b) l 
-    | (separaConjunciones a l)
-    | (separaConjunciones b l)
+separaConjunciones (a :|: b) l = (separaConjunciones a l) ++
+                                 (separaConjunciones b l)
 
 -- Función que dada una formula en FNC regresa una lista de sus clausulas.
 separaClausulas:: Formula -> [[Formula]] -> [[Formula]]
-separaClausulas (a :&: b) l = (separaClausulas a l) (separaClausulas b l)
+separaClausulas (a :&: b) l = (separaClausulas a l) ++ (separaClausulas b l)
 separaClausulas a l = (separaConjunciones a []):l
 
 -- PUNTO 5
