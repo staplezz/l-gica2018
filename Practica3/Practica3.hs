@@ -189,7 +189,7 @@ res:: [Formula] -> [Formula] -> [Formula]
 res a b = []
 
 saturacion:: [[Formula]] -> Bool
-saturacion [] = False
+saturacion l = False
 saturacion (x:y:zs) = False
 
 -- PUNTO 7
