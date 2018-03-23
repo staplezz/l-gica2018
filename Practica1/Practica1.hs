@@ -35,14 +35,14 @@ volumenCilindro r h = 2*pi*r^2*h
 --Realiza operaciones varias dependiendo de el caractér que le pasan.
 aplicaOperacion:: Char -> Int -> Int -> Int
 aplicaOperacion a b c =
-	case a of
-		's' -> b
-		't' -> c
-		'a' -> b   +	c
-		'r' -> b   -	c
-		'p' -> b   *	c
-		'd' -> b `div`	c
-		'e' -> b   ^	c
+    case a of
+        's' -> b
+        't' -> c
+        'a' -> b   +    c
+        'r' -> b   -    c
+        'p' -> b   *    c
+        'd' -> b `div`  c
+        'e' -> b   ^    c
 
 --PUNTO 4
 --Recibe un entero y devuelve la aproximación entera a su raíz cuadrada.
@@ -69,8 +69,8 @@ tribonacciesAux 0 = 0
 tribonacciesAux 1 = 1
 tribonacciesAux 2 = 1
 tribonacciesAux n = tribonacciesAux (n-3) + 
-					tribonacciesAux (n-2) + 
-					tribonacciesAux (n-1)
+                    tribonacciesAux (n-2) + 
+                    tribonacciesAux (n-1)
 
 --Función que recibe una lista y elimina los duplicados adyacentes de la lista,
 --dejando una presencia de cada elemento contiguo.
@@ -78,11 +78,11 @@ eliminaDup:: (Eq a) => [a] -> [a]
 eliminaDup ls = eliminaDupAux ls
 
 eliminaDupAux:: Eq a => [a] -> [a]
-eliminaDupAux []		= 	[]
-eliminaDupAux [x]		= 	[x]
-eliminaDupAux (x:y:zs)	= 	if (x == y)
-							then eliminaDupAux(x:zs)
-							else x:eliminaDupAux(y:zs)
+eliminaDupAux []        =   []
+eliminaDupAux [x]       =   [x]
+eliminaDupAux (x:y:zs)  =   if (x == y)
+                            then eliminaDupAux(x:zs)
+                            else x:eliminaDupAux(y:zs)
 
 --PUNTO 8
 --Una función que recibe una lista y devuelve la misma pero en el orden inverso.
@@ -93,13 +93,13 @@ reversa (x : xs) = reversa xs ++ [x]
 --Función que recibe una lista y devuelve a los elementos de la lista que
 --cumplen el predicado recibido..
 filtra :: (a -> Bool) -> [a] -> [a]
-filtra predicado []  = 	[]	
-filtra predicado [x] =	if predicado x
-						then [x]
-						else []
+filtra predicado []  =  []  
+filtra predicado [x] =  if predicado x
+                        then [x]
+                        else []
 filtra predicado (x : xs) = if predicado x 
-							then (x : filtra predicado xs)
-							else (filtra predicado xs)
+                            then (x : filtra predicado xs)
+                            else (filtra predicado xs)
 
 --Función que recibe una lista y devuelve una lista con pares ordenados (k, x),
 --donde k es el máximo número de apariciones consecutivas del elemento x.
