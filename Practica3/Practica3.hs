@@ -41,7 +41,7 @@ eliminaDup (x:xs) = x:eliminaDup (filter (/= x) xs)
 --  Función auxiliar de varList que realmente hace todo el trabajo
 auxVarList :: Formula -> [Var]
 auxVarList (Prop p) = [p]
-auxVarList (Neg formula) = (auxVarList formula)
+auxVarList (Neg a)  = (auxVarList a)
 auxVarList (a :&:   b) = (auxVarList a) ++ (auxVarList b)
 auxVarList (a :|:   b) = (auxVarList a) ++ (auxVarList b)
 auxVarList (a :=>:  b) = (auxVarList a) ++ (auxVarList b)
@@ -50,25 +50,25 @@ auxVarList (a :<=>: b) = (auxVarList a) ++ (auxVarList b)
 -- Función recursiva que recibe una fórmula y devuelve el conjunto de variables
 -- que hay en la fórmula.
 varList :: Formula -> [Var]
-varList (formula) = eliminaDup (auxVarList formula)
+varList a = eliminaDup (auxVarList a)
 
 -- Función que recibe una fórmula y devuelve su negación.
 negacion :: Formula -> Formula
 negacion (Prop p) = Neg (Prop p)
-negacion (Neg formula) = formula
+negacion (Neg a)  = a
 negacion (a :|: b) = (negacion a) :&: (negacion b)
 negacion (a :&: b) = (negacion a) :|: (negacion b)
-negacion formula = negacion (equivalencia formula)
+negacion a = negacion (equivalencia a)
 
 -- Función que recibe una fórmula y elimina implicaciones y equivalencias.
 equivalencia :: Formula -> Formula
-equivalencia (Neg formula) = negacion formula
+equivalencia (Neg a) = negacion a
 equivalencia (a :|:   b) = (equivalencia a) :|: (equivalencia b)
 equivalencia (a :&:   b) = (equivalencia a) :&: (equivalencia b)
 equivalencia (a :=>:  b) = ((negacion a) :|: (equivalencia b))
 equivalencia (a :<=>: b) = ((negacion a) :|: (equivalencia b)) :&: 
                            ((negacion b) :|: (equivalencia a))
-equivalencia formula =  formula
+equivalencia a = a
 
 -- Función auxilar de sustituye que busca una variable en la lista y regresa 
 -- otra variable si hubo coincidencia.
@@ -83,7 +83,7 @@ busca p ((x,y):zs) = if (p == x)
 -- la fórmula por la pareja ordenada que le corresponde en la lista.
 sustituye :: Formula -> [(Var,Var)] -> Formula
 sustituye (Prop p) l = busca p l
-sustituye (Neg formula) l = Neg (sustituye formula l)
+sustituye (Neg a) l = Neg (sustituye a l)
 sustituye (a :&:   b) l = (sustituye a l) :&:   (sustituye b l)
 sustituye (a :|:   b) l = (sustituye a l) :|:   (sustituye b l)
 sustituye (a :=>:  b) l = (sustituye a l) :=>:  (sustituye b l)
@@ -102,7 +102,7 @@ buscaValor prop ((var, b):ys)
 -- que le corresponde a cada variable.
 interp :: Formula -> [(Var,Bool)] -> Bool
 interp (Prop p) l = buscaValor p l
-interp (Neg formula) l = not (interp formula l)
+interp (Neg a)  l = not (interp a l)
 interp (a :=>:  b) l = (not (interp a l)) || (interp b l)
 interp (a :<=>: b) l = (interp (a :=>: b) l) == (interp (b :=>: a) l)
 interp (a :&: b) l = (interp a l) && (interp b l)
@@ -137,8 +137,8 @@ auxEsContradicc ((l,x):xs) = (not x) && (not (auxEsContradicc xs))
 -- PUNTO 3
 -- Función que recibe una fórmula y devuelve True, si la fórmula es contra-
 -- dicción y False en otro caso.
-esContradicción:: Formula -> Bool
-esContradicción a = auxEsContradicc (tablaVerdad a)
+esContradiccion:: Formula -> Bool
+esContradiccion a = auxEsContradicc (tablaVerdad a)
 
 -- PUNTO 4
 -- Función que recibe una fórmula y devuelve True, si la fórmula es satisfacible
@@ -148,7 +148,7 @@ esSatisfacible a = not (auxEsContradicc (tablaVerdad a))
 
 -- Función que recibe una fórmula y la devuelve en Forma normal negativa.
 fnn:: Formula -> Formula
-fnn formula = equivalencia formula
+fnn a = equivalencia a
 
 -- Función auxiliar que distribuye conjunciones.
 distriDisyun:: Formula -> Formula -> Formula
@@ -160,48 +160,54 @@ distriDisyun a b = a :|: b
 auxFnc:: Formula -> Formula
 auxFnc (a :&: b) = (auxFnc a) :&: (auxFnc b)
 auxFnc (a :|: b) = distriDisyun (auxFnc a) (auxFnc b)
-auxFnc formula = formula
+auxFnc a = a
 
 -- Función que recibe una fórmula y la devuelve en Forma normal conjuntiva.
 fnc:: Formula -> Formula
-fnc formula = auxFnc (equivalencia formula)
+fnc a = auxFnc (equivalencia a)
 
 -- Función que dada una formula de solo disyunciones regresa una lista de formu-
 -- las atomicas en ella.
-separaConjunciones:: Formula -> [Formula] -> [Formula]
-separaConjunciones (Prop p)  l = (Prop p):l
-separaConjunciones (Neg  a)  l = (Neg  a):l
-separaConjunciones (a :|: b) l = (separaConjunciones a l) ++
-                                 (separaConjunciones b l)
+separaConjunciones:: Formula -> [Formula]
+separaConjunciones (Prop p)  = [(Prop p)]
+separaConjunciones (Neg  a)  = [(Neg  a)]
+separaConjunciones (a :|: b) = (separaConjunciones a) ++ (separaConjunciones b)
 
 -- Función que dada una formula en FNC regresa una lista de sus clausulas.
-separaClausulas:: Formula -> [[Formula]] -> [[Formula]]
-separaClausulas (a :&: b) l = (separaClausulas a l) ++ (separaClausulas b l)
-separaClausulas a l = (separaConjunciones a []):l
+separaClausulas:: Formula -> [[Formula]]
+separaClausulas (a :&: b) = (separaClausulas a) ++ (separaClausulas b)
+separaClausulas a = [(separaConjunciones a)]
 
 -- PUNTO 5
 -- Función que calcula el conjunto S de cláusulas de una Fórmula.
 calculaS:: Formula -> [[Formula]]
-calculaS a = separaClausulas (fnc a) []
-
+calculaS a = separaClausulas (fnc a)
 
 -- PUNTO 6
 -- Función que recibe dos cláusulas y devuelve el resolvente de ambas.
 res:: [Formula] -> [Formula] -> [Formula]
-res a b = [] -- Pa' compilar.
+res a b = []
+
+saturacion:: [[Formula]] -> Bool
+saturacion [] = False
+saturacion (x:y:zs) = False
 
 -- PUNTO 7
 -- Función que indica si se obtiene la cláusula vacía después de aplicar el 
 -- algoritmo de saturación a un conjunto de cláusulas.
 resolucionBinaria:: Formula -> Bool
-resolucionBinaria a = False -- Pa' compilar.
+resolucionBinaria a = saturacion (calculaS a)
+
+-- Funcion que dada una lista de formulas las transforma en una conjunción.
+formulaLista:: [Formula] -> Formula
+formulaLista (l:[]) = l
+formulaLista (l:ls) = l :&: (formulaLista ls)
 
 -- PUNTO 8
 -- Función que recibe un conjunto de premisas, una conclusión y nos dice si el 
 -- argumento lógico es correcto.
 resBin:: [Formula] -> Formula -> Bool
-resBin [] a = False -- Pa' compilar.
-
+resBin l a = resolucionBinaria ((formulaLista l) :&: (negacion a))
 
 --------------------------------------------------------------------------------
 -- Fin Practica3.hs                                                           --
