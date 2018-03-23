@@ -1,5 +1,21 @@
---Practica 1
---Lógica Computacional 2018-2.
+--------------------------------------------------------------------------------
+-- Practica1.hs - v1.0                                                        --
+--                           Lógica Computacional                             --
+--                    Facultad de Ciencias, UNAM, 2018-2                      --
+--                      Todos los derechos reservados.                        --
+--                                                                            --
+--                               Práctica 1                                   --
+--                                                                            --
+-- Objetivos y Anotaciones                                                    --
+--    Que el alumno tenga una breve introducción a Haskell y la programación  --
+--    funcional, así como a utilizar los tipos básicos en Haskell,            --
+--    estructuras de control y también la caza de patrones.                   --
+--                                                                            --
+-- Profesor: Pilar Selene Linares Arévalo                                     --
+-- Ayudante: Daniela Calderón Pérez                                           --
+-- Ayud.Lab: Alejando Hernández Mora                                          --
+-- Ayud.Lab: Luis Manuel Martínez Damaso                                      --
+--------------------------------------------------------------------------------
 
 --PUNTO 1
 --Evalúa a b c x en la derivada de ax^2+bx+c.
@@ -119,7 +135,10 @@ lista1 = [(2^x) - 1 | x <- [0..6]]
 --Lista [(3, 4),(7, 8),(11, 12),(15, 16), ...]
 lista2 = [((x-1),x) | x <- [4,8..]]
 
---Fin práctica 1.
---Cortés López Jorge Francisco  314330981   kokofrank@ciencias.unam.mx
---López Arias Víctor Ulises     310173335   ulises.lopez@ciencias.unam.mx
---Sainz Takata Izumi María      314245195   sainz@ciencias.unam.mx
+--------------------------------------------------------------------------------
+-- Fin Practica1.hs                                                           --
+--                                                                            --
+-- Cortés López Jorge Francisco  314330981   kokofrank@ciencias.unam.mx       --
+-- López Arias Víctor Ulises     310173335   ulises.lopez@ciencias.unam.mx    --
+-- Sainz Takata Izumi María      314245195   sainz@ciencias.unam.mx           --
+--------------------------------------------------------------------------------
