@@ -201,6 +201,7 @@ separaClausulas a         = [(serparaDisyun a)]
 calculaS :: Formula -> [[Formula]]
 calculaS a = separaClausulas (fnc a)
 
+-- Auxiliar para la resolución binaria que realmente hace todo.
 resAux :: [Formula] -> [Formula] -> [Formula]
 resAux [] l = l
 resAux l [] = l
@@ -213,12 +214,12 @@ resAux (x:xs) (y:ys) =
             then ys ++ (filter (/= negacion y) (x:xs))
             else x:y:(resAux xs ys)
 
-clausulasEq ::  [Formula] -> [Formula] -> Bool
-clausulasEq [] _ = True
-clausulasEq (x:xs) l = elem x l && clausulasEq xs l
-
+-- Nos indica si hay un error en la resolucion
 errorRes :: [Formula] -> [Formula] -> [Formula] -> Bool
-errorRes x y r = (clausulasEq x r) && (clausulasEq y r) 
+errorRes x y r = 
+    let cEq [] _ = True
+        cEq (x:xs) l = elem x l && cEq xs l
+    in (cEq x r) && (cEq y r) 
 
 -- PUNTO 6
 -- Función que recibe dos cláusulas y devuelve el resolvente de ambas.
@@ -234,7 +235,7 @@ cuenta :: [[Formula]] -> Int
 cuenta [] = 0
 cuenta (x:xs) = 1 + (cuenta xs)
 
--- Función que hace da el n-ésimo conjunto de clausulas.
+-- Función que da el n-ésimo conjunto de clausulas.
 nSaturacion :: [[Formula]] -> [[Formula]]
 nSaturacion [] = []
 nSaturacion (x:xs) = 
