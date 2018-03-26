@@ -110,19 +110,19 @@ interp (a :|: b) l = (interp a l) || (interp b l)
 
 -- Función que recibe una variable y regresa una lista con las variable y un
 -- boleano asignada a ella.
-estados:: Var -> [(Var,Bool)]
+estados :: Var -> [(Var,Bool)]
 estados a = [ (a,b) | b <- [True, False] ]
 
 -- Función que recibe una lista de variables y regresa una lista de listas de
 -- estados simulando la creacion en una tabla  de verdad.
-generaEstados:: [Var] -> [([(Var,Bool)])]
-generaEstados [] = [[]]
+generaEstados :: [Var] -> [([(Var,Bool)])]
+generaEstados []     = [[]]
 generaEstados (a:as) = [ b:bs | b <- estados a, bs <- generaEstados as ]
 
 -- Función que recibe una fórmula y una lista de listas de estados y regresa una
 -- lista con los estados y la interpretación de la formula en ellos.
-auxTabla:: Formula -> [([(Var,Bool)])] -> [([(Var,Bool)], Bool)]
-auxTabla _ [] = []
+auxTabla :: Formula -> [([(Var,Bool)])] -> [([(Var,Bool)], Bool)]
+auxTabla _ []     = []
 auxTabla a (b:bs) = (b,(interp a b)):(auxTabla a bs)
 
 -- PUNTO 1
@@ -130,102 +130,123 @@ auxTabla a (b:bs) = (b,(interp a b)):(auxTabla a bs)
 -- ordenados, donde el primer elemento es un estado para cada una de las 
 -- variables y el segundo elemento del par ordenado es el resultado de la 
 -- función de interpretación de la fórmula en ese estado
-tablaVerdad:: Formula -> [([(Var,Bool)], Bool)]
+tablaVerdad :: Formula -> [([(Var,Bool)], Bool)]
 tablaVerdad a = auxTabla a (generaEstados (varList a))
 
 -- Función que dada una lista de interpretanciones, regresa True si es una 
 -- tautología, Flase en otro caso.
-auxEsTautologia:: [([(Var,Bool)], Bool)] -> Bool
-auxEsTautologia [] = True
+auxEsTautologia :: [([(Var,Bool)], Bool)] -> Bool
+auxEsTautologia []         = True
 auxEsTautologia ((l,x):xs) = x && auxEsTautologia xs
 
 -- PUNTO 2
 -- Función que recibe una fórmula y devuelve True, si la fórmula es tautología y
 -- False en otro caso.
-esTautologia:: Formula -> Bool
+esTautologia :: Formula -> Bool
 esTautologia a = auxEsTautologia (tablaVerdad a)
 
 -- Función que dada una lista de interpretanciones, regresa True si es 
 -- satisfacible, False en otro caso.
-auxEsSatisfacible:: [([(Var,Bool)], Bool)] -> Bool
-auxEsSatisfacible [] = False
+auxEsSatisfacible :: [([(Var,Bool)], Bool)] -> Bool
+auxEsSatisfacible []         = False
 auxEsSatisfacible ((l,x):xs) = x || (auxEsSatisfacible xs)
 
 -- PUNTO 3
 -- Función que recibe una fórmula y devuelve True, si la fórmula es contra-
 -- dicción y False en otro caso.
-esContradiccion:: Formula -> Bool
+esContradiccion :: Formula -> Bool
 esContradiccion a = not (auxEsSatisfacible (tablaVerdad a))
 
 -- PUNTO 4
 -- Función que recibe una fórmula y devuelve True, si la fórmula es satisfacible
 -- y False en otro caso.
-esSatisfacible:: Formula -> Bool
+esSatisfacible :: Formula -> Bool
 esSatisfacible a = auxEsSatisfacible (tablaVerdad a)
 
 -- Función que recibe una fórmula y la devuelve en Forma normal negativa.
-fnn:: Formula -> Formula
+fnn :: Formula -> Formula
 fnn a = equivalencia a
 
 -- Función auxiliar que distribuye conjunciones.
-distriDisyun:: Formula -> Formula -> Formula
+distriDisyun :: Formula -> Formula -> Formula
 distriDisyun (a :&: b) g = (distriDisyun a g) :&: (distriDisyun b g)
 distriDisyun a (b :&: g) = (distriDisyun a b) :&: (distriDisyun a g)
-distriDisyun a b = a :|: b
+distriDisyun a b         = a :|: b
 
 -- Función auxilar de fnc que realmente hace todo.
-auxFnc:: Formula -> Formula
+auxFnc :: Formula -> Formula
 auxFnc (a :&: b) = (auxFnc a) :&: (auxFnc b)
 auxFnc (a :|: b) = distriDisyun (auxFnc a) (auxFnc b)
 auxFnc a = a
 
 -- Función que recibe una fórmula y la devuelve en Forma normal conjuntiva.
-fnc:: Formula -> Formula
+fnc :: Formula -> Formula
 fnc a = auxFnc (equivalencia a)
 
 -- Función que dada una formula de solo disyunciones regresa una lista de formu-
 -- las atomicas en ella.
-serparaDisy:: Formula -> [Formula]
-serparaDisy (Prop p) = [(Prop p)]
-serparaDisy (Neg (Prop p)) = [(Prop p)]
-serparaDisy ((Prop p) :|: a) = (Prop p):(serparaDisy a)
-serparaDisy ((Neg (Prop p)) :|: a) = (Neg(Prop p)):(serparaDisy a)
+serparaDisyun :: Formula -> [Formula]
+serparaDisyun (Prop p)               = [(Prop p)]
+serparaDisyun (Neg (Prop p))         = [(Neg (Prop p))]
+serparaDisyun (a :|: (Prop p))       = (Prop p):(serparaDisyun a)
+serparaDisyun (a :|: (Neg (Prop p))) = (Neg(Prop p)):(serparaDisyun a)
 
 -- Función que dada una formula en FNC regresa una lista de sus cláusulas.
-separaClausulas:: Formula -> [[Formula]]
+separaClausulas :: Formula -> [[Formula]]
 separaClausulas (a :&: b) = (separaClausulas a) ++ (separaClausulas b)
-separaClausulas a = [(serparaDisy a)]
+separaClausulas a         = [(serparaDisyun a)]
 
 -- PUNTO 5
 -- Función que calcula el conjunto S de cláusulas de una Fórmula.
-calculaS:: Formula -> [[Formula]]
+calculaS :: Formula -> [[Formula]]
 calculaS a = separaClausulas (fnc a)
+
+--Función que recibe una lista y elimina los duplicados de la lista.
+eliminaDup :: (Eq a) => [a] -> [a]
+eliminaDup [] = []
+eliminaDup (x:xs) = x:eliminaDup (filter (/= x) xs)
+
+esComplement :: Formula -> Formula -> Formula
+esComplement a b = if 
+
+auxRes :: [Formula] -> [Formula] -> [Formula] -> [Formula]
+auxRes [] _ = []
+auxRes _ [] = []
+auxRes (a:as) (b:bs) = 
+    let r = 
+    ():(auxRes as bs)
 
 -- PUNTO 6
 -- Función que recibe dos cláusulas y devuelve el resolvente de ambas.
-res:: [Formula] -> [Formula] -> [Formula]
-res a b = []
+res :: [Formula] -> [Formula] -> [Formula]
+res a b = auxRes a b []
 
-saturacion:: [[Formula]] -> Bool
-saturacion l = False
-saturacion (x:y:zs) = False
+nSaturacion :: [[Formula]] -> [[Formula]]
+nSaturacion [] = []
+nSaturacion (x:xs) = [ (res  x y) | y <- xs ] ++ (nSaturacion xs)
+
+saturacion :: [[Formula]] -> Int -> Bool
+saturacion l n = 
+    let sat = saturacion l
+    let c   = cuenta sat
+    in if (n \= c) then (elem [] sat) || (saturacion sat c) else False
 
 -- PUNTO 7
 -- Función que indica si se obtiene la cláusula vacía después de aplicar el 
 -- algoritmo de saturación a un conjunto de cláusulas.
-resolucionBinaria:: Formula -> Bool
-resolucionBinaria a = saturacion (calculaS a)
+resolucionBinaria :: Formula -> Bool
+resolucionBinaria a = saturacion (calculaS a) 0
 
 -- Función que dada una lista de formulas las transforma en una conjunción.
-formulaLista:: [Formula] -> Formula
+formulaLista :: [Formula] -> Formula
 formulaLista (l:[]) = l
 formulaLista (l:ls) = l :&: (formulaLista ls)
 
 -- PUNTO 8
 -- Función que recibe un conjunto de premisas, una conclusión y nos dice si el 
 -- argumento lógico es correcto.
-resBin:: [Formula] -> Formula -> Bool
-resBin l a = resolucionBinaria ((formulaLista l) :&: (negacion a))
+resBin :: [Formula] -> Formula -> Bool
+resBin l a = not (resolucionBinaria ((formulaLista l) :&: (negacion a)))
 
 --------------------------------------------------------------------------------
 -- Fin Practica3.hs                                                           --
