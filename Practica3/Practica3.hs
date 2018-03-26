@@ -26,7 +26,7 @@ data Formula = Prop Var
     |Formula :|: Formula
     |Formula :=>: Formula
     |Formula :<=>: Formula deriving (Show, Eq, Ord)
-
+    
 -- Precedencia y asociatividad.
 infixl 9 :&:
 infixl 9 :|:
@@ -201,35 +201,52 @@ separaClausulas a         = [(serparaDisyun a)]
 calculaS :: Formula -> [[Formula]]
 calculaS a = separaClausulas (fnc a)
 
---Función que recibe una lista y elimina los duplicados de la lista.
-eliminaDup :: (Eq a) => [a] -> [a]
-eliminaDup [] = []
-eliminaDup (x:xs) = x:eliminaDup (filter (/= x) xs)
+resAux :: [Formula] -> [Formula] -> [Formula]
+resAux [] l = l
+resAux l [] = l
+resAux (x:xs) (y:ys) = 
+    let fx = (filter (== negacion x) (y:ys))
+        fy = (filter (== negacion y) (x:xs))
+    in if (fx /= [])
+        then xs ++ (filter (/= negacion x) (y:ys))
+        else if (fy /= [])
+            then ys ++ (filter (/= negacion y) (x:xs))
+            else x:y:(resAux xs ys)
 
-esComplement :: Formula -> Formula -> Formula
-esComplement a b = if 
+clausulasEq ::  [Formula] -> [Formula] -> Bool
+clausulasEq [] _ = True
+clausulasEq (x:xs) l = elem x l && clausulasEq xs l
 
-auxRes :: [Formula] -> [Formula] -> [Formula] -> [Formula]
-auxRes [] _ = []
-auxRes _ [] = []
-auxRes (a:as) (b:bs) = 
-    let r = 
-    ():(auxRes as bs)
+errorRes :: [Formula] -> [Formula] -> [Formula] -> Bool
+errorRes x y r = (clausulasEq x r) && (clausulasEq y r) 
 
 -- PUNTO 6
 -- Función que recibe dos cláusulas y devuelve el resolvente de ambas.
 res :: [Formula] -> [Formula] -> [Formula]
-res a b = auxRes a b []
+res x y = 
+    let r = resAux x y
+    in if (errorRes x y r) 
+            then error "No hay complementarias."
+            else r
 
+-- Cuenta cuantas clausulas hay en una lista.
+cuenta :: [[Formula]] -> Int
+cuenta [] = 0
+cuenta (x:xs) = 1 + (cuenta xs)
+
+-- Función que hace da el n-ésimo conjunto de clausulas.
 nSaturacion :: [[Formula]] -> [[Formula]]
 nSaturacion [] = []
-nSaturacion (x:xs) = [ (res  x y) | y <- xs ] ++ (nSaturacion xs)
+nSaturacion (x:xs) = 
+    let valida x y r = if (errorRes x y r) then x else r
+    in [ (valida x y (resAux x y)) | y <- xs ] ++ (nSaturacion xs)
 
+-- Función que hace el algoritmo de saturación.
 saturacion :: [[Formula]] -> Int -> Bool
 saturacion l n = 
-    let sat = saturacion l
-    let c   = cuenta sat
-    in if (n \= c) then (elem [] sat) || (saturacion sat c) else False
+    let sat = eliminaDup (nSaturacion l)
+        c   = cuenta sat
+    in if (n /= c) then (elem [] sat) || (saturacion sat c) else False
 
 -- PUNTO 7
 -- Función que indica si se obtiene la cláusula vacía después de aplicar el 
@@ -246,7 +263,7 @@ formulaLista (l:ls) = l :&: (formulaLista ls)
 -- Función que recibe un conjunto de premisas, una conclusión y nos dice si el 
 -- argumento lógico es correcto.
 resBin :: [Formula] -> Formula -> Bool
-resBin l a = not (resolucionBinaria ((formulaLista l) :&: (negacion a)))
+resBin l a = (resolucionBinaria ((formulaLista l) :&: (negacion a)))
 
 --------------------------------------------------------------------------------
 -- Fin Practica3.hs                                                           --
