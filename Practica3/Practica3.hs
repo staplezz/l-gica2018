@@ -201,10 +201,15 @@ separaClausulas a = [(serparaDisy a)]
 calculaS:: Formula -> [[Formula]]
 calculaS a = separaClausulas (fnc a)
 
--- PUNTO 6
--- Función que recibe dos cláusulas y devuelve el resolvente de ambas.
+-- PUNTO 6 NO TERMINADO
+--Una función que recibe dos cláusulas y devuelve el resolvente de ambas.
 res:: [Formula] -> [Formula] -> [Formula]
-res a b = []
+res [(Prop p)] [Neg (Prop q)] = if (p==q)
+							then []
+							else [(Prop p), (Prop q)]
+res [(Prop p)] [(Prop q)] = [(Prop p), (Prop q)]
+res [(Formula alfa)] [(Formula omega)] = res [(alfa :|: omega)]
+res [(alfa :|: omega)] = map ()
 
 saturacion:: [[Formula]] -> Bool
 saturacion l = False
