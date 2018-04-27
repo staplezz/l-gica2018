@@ -165,34 +165,10 @@ entrada(a).
       </ul>
    @descr Se cumple si X tiene el telefono de la casa. Lo declaramos.
 */
-telefono(g).
+telefono(g).        
 
 /**
-  @form buscaCamino(X,Y)
-    @constraints
-      <ul>
-        <li>X es un vertice.</li>
-        <li>Y es un vertice.</li>
-      </ul>
-   @descr Busca un camino desde el vertice X hasta el vertice Y.
-*/
-buscaCamino(X,Y) :- camino(X,Y,[],[]).
-
-/**
-  @form buscaCaminoSin(X,Y,L)
-    @constraints
-      <ul>
-        <li>X es un vertice.</li>
-        <li>Y es un vertice.</li>
-        <li>L es una lista de vertices.</li>
-      </ul>
-   @descr Busca un camino desde el vertice X hasta el vertice Y sin pasar por 
-          ningún vertice que esté en L.
-*/
-buscaCaminoSin(X,Y,L):- camino(X,Y,L,[]).
-
-/**
-  @form camino(X,Y,V,L)
+  @form camino(X,Y,L,V)
     @constraints
       <ul>
         <li>X es un vertice.</li>
@@ -205,12 +181,29 @@ buscaCaminoSin(X,Y,L):- camino(X,Y,L,[]).
 */
 camino(X,Y,L,V):-
         vecino(X,Z),
-        \en(Z,V),
-        \en(Z,L),
+        \+ en(Z,V),
+        \+ en(Z,L),
         (
-                Z = Y;
-                camino(Z,Y,[X|V])
+                revisa(Y,Z,[X|V]);
+                camino(Z,Y,L,[X|V])
         ).
+
+/**
+  @form revisa(X,Y,L)
+    @constraints
+      <ul>
+        <li>X es un vertice.</li>
+        <li>Y es un vertice.</li>
+        <li>L es una lista de vertices.</li>
+      </ul>
+   @descr Revisa si la condicion final se cumple. Entonces imprime un camino.
+*/
+revisa(X,Y,L) :- 
+        X = Y, 
+        format("["),
+        imprime([X|L]),
+        format("]~n").
+
 /**
   @form en(X,L)
     @constraints
@@ -230,7 +223,7 @@ en(X,[Y|L]) :- X = Y; en(X,L).
 ejercicio_3b :- 
         entrada(X),
         telefono(Y),
-        buscaCamino(X,Y).
+        camino(X,Y,[],[]).
 
 /**
   @form ejercicio_3c
@@ -240,8 +233,19 @@ ejercicio_3b :-
 ejercicio_3c :- 
         entrada(X),
         telefono(Y),
-        buscaCamino(X,Y,[f,d]).
+        camino(X,Y,[f,d],[]).
 
+/**
+  @form imprime(L)
+    @constraints
+      <ul>
+        <li>L es una lista de vertices.</li>
+      </ul>
+   @descr Imprime una lista de verticces separados por comas.
+*/
+imprime([]).
+imprime([E]) :- format("~w",E).
+imprime([E|L]) :- format("~w,",E), imprime(L).
 
 /*******************************************************************************
 *  Fin Practica4.pl                                                            *
