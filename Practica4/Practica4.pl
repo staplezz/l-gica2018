@@ -28,11 +28,82 @@
   @date 26/04/2018
 */
 
+
 /**
-  @form e(x)
+  @form and(X,Y)
     @constraints
       <ul>
-        <li>x es </li>
+        <li>X es true o false</li>
+        <li>Y es true o false</li>
+      </ul>
+   @descr Simula la compuerta lógica AND.
+*/
+and(true,true).
+
+/**
+  @form not(X)
+    @constraints
+      <ul>
+        <li>X es true o false</li>
+      </ul>
+   @descr Simula la compuerta lógica NOT.
+*/
+not(false).
+
+/**
+  @form ejercicio_1a(X,Y)
+    @constraints
+      <ul>
+        <li>X es un booleano.</li>
+        <li>Y es un booleano.</li>
+      </ul>
+   @descr Simula el digrama descrito en la práctica.
+*/
+ejercicio_1a(X,Y) :- and(not(and(not(X),Y)),Y).
+
+/**
+  @form ejercicio_1b(X,Y,Z)
+    @constraints
+      <ul>
+        <li>X es un booleano.</li>
+        <li>Y es un booleano.</li>
+        <li>Z es un booleano.</li>
+      </ul>
+   @descr Simula el digrama descrito en la práctica.
+*/
+ejercicio_1b(X,Y,Z) :- and(not(and(not(X),X)),and(Y,Z)).
+
+/**
+  @form bt(X)
+    @constraints
+      <ul>
+        <li> @void Es un árbol. </li>
+        <li>Un nodo que contiene a un entero y dos árboles es un árbol. </li>
+      </ul>
+   @descr Representamos el predicado ser árbol binario.
+*/
+bt(void).
+bt(node(A,T1,T2)):- integer(A),bt(T1),bt(T2).
+
+/**
+  @form elem(A,T)
+    @constraints
+      <ul>
+        <li>A es un entero.</li>
+        <li>T es un árbol. </li>
+      </ul>
+   @descr Se cumple si A es elemento de T.
+*/
+elem(A,bt(node(B,T1,T2))) :- A = B; elem(A,T1); elem(A,T2).
+
+
+
+/**
+  @form ejercicio_(X,Y)
+    @constraints
+      <ul>
+        <li>X es </li>
+        <li>Y es </li>
       </ul>
    @descr ...
 */
