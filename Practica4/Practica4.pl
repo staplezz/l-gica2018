@@ -168,33 +168,28 @@ entrada(a).
 telefono(g).
 
 /**
-  @form buscaCamino(X,Y,R)
+  @form buscaCamino(X,Y)
     @constraints
       <ul>
         <li>X es un vertice.</li>
         <li>Y es un vertice.</li>
-        <li>R es una lista de vertices.</li>
       </ul>
-   @descr Busca un camino desde el vertice X hasta el vertice Y y lo guarda en 
-          R.
+   @descr Busca un camino desde el vertice X hasta el vertice Y.
 */
-buscaCamino(X,Y) :- buscaCaminoSin(X,Y,[],R).
+buscaCamino(X,Y) :- camino(X,Y,[],[]).
 
 /**
-  @form buscaCaminoSin(X,Y,L,R)
+  @form buscaCaminoSin(X,Y,L)
     @constraints
       <ul>
         <li>X es un vertice.</li>
         <li>Y es un vertice.</li>
         <li>L es una lista de vertices.</li>
-        <li>R es una lista de vertices.</li>
       </ul>
    @descr Busca un camino desde el vertice X hasta el vertice Y sin pasar por 
-          ningún vertice que esté en L y la guarda en R.
+          ningún vertice que esté en L.
 */
-buscaCaminoSin(X,Y,L,R):-
-  V = [],
-  camino(X,Y,V,L,R).
+buscaCaminoSin(X,Y,L):- camino(X,Y,L,[]).
 
 /**
   @form camino(X,Y,V,L)
@@ -204,21 +199,18 @@ buscaCaminoSin(X,Y,L,R):-
         <li>Y es un vertice.</li>
         <li>V es una lista de vertices.</li>
         <li>L es una lista de vertices.</li>
-        <li>R es una lista de vertices.</li>
       </ul>
    @descr Busca un camino desde el vertice X hasta el vertice Y sin pasar por 
-          ningún vertice que esté en L y va guardandolo en R.
+          ningún vertice que esté en L.
 */
-camino(X,Y,V,L,R):-
-        en(X,V),
-        !;
-        T = [X|V],
-        siguiente(T,vecinos(X),L,Z),
-        Z = Y,
-        R = [Z|T],
-        !;
-        camino(Z,Y,T,L,R).
-
+camino(X,Y,L,V):-
+        vecino(X,Z),
+        \en(Z,V),
+        \en(Z,L),
+        (
+                Z = Y;
+                camino(Z,Y,[X|V])
+        ).
 /**
   @form en(X,L)
     @constraints
@@ -229,6 +221,27 @@ camino(X,Y,V,L,R):-
    @descr Se cumple si X elemento de L.
 */
 en(X,[Y|L]) :- X = Y; en(X,L). 
+
+/**
+  @form ejercicio_3b
+   @descr Busca un camino desde la entrada de la casa hasta donde está el 
+          teléfono.
+*/
+ejercicio_3b :- 
+        entrada(X),
+        telefono(Y),
+        buscaCamino(X,Y).
+
+/**
+  @form ejercicio_3c
+   @descr Busca un camino desde la entrada de la casa hasta donde está el 
+          teléfono sin pasar por los cuartos f o d.
+*/
+ejercicio_3c :- 
+        entrada(X),
+        telefono(Y),
+        buscaCamino(X,Y,[f,d]).
+
 
 /*******************************************************************************
 *  Fin Practica4.pl                                                            *
@@ -241,12 +254,3 @@ en(X,[Y|L]) :- X = Y; en(X,L).
 
 
 
-/**
-  @form ejercicio_(X,Y)
-    @constraints
-      <ul>
-        <li>X es </li>
-        <li>Y es </li>
-      </ul>
-   @descr ...
-*/
