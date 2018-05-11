@@ -8,7 +8,7 @@
 *                             Práctica 5: Prolog                               *
 *                                                                              *
 *  Objetivos y Anotaciones                                                     *
-*     Mejorar el manejo el lenguaje de programación PROLOG.                    *
+*     Mejorar el manejo del lenguaje de programación PROLOG.                   *
 *                                                                              *
 *  Profesor: Pilar Selene Linares Arévalo                                      *
 *  Ayudante: Daniela Calderón Pérez                                            *
@@ -25,9 +25,11 @@
   @author Cortés López Jorge Francisco
   @author López Arias Victor Ulises
   @author Sainz Takata Izumi María
-  @date 26/04/2018
+  @date 11/05/2018
 */
 
+/******************************************************************************/
+/*                                   1.a)                                     */
 /**
   @form push(x, l, L)
     @constraints
@@ -41,6 +43,8 @@
 push(X, [], [X]).
 push(X, [H|L], [X|[H|L]]).
 
+/******************************************************************************/
+/*                                   1.b)                                     */
 /**
   @form pop([x|l], L)
     @constraints
@@ -54,6 +58,8 @@ push(X, [H|L], [X|[H|L]]).
 pop([], []).
 pop([_|L], L).
 
+/******************************************************************************/
+/*                                   1.c)                                     */
 /**
   @form append(l1, l2, L)
     @constraints
@@ -68,6 +74,8 @@ append([], L, L).
 append(L, [], L).
 append([H|T], L, [H|R]) :- append(T, L, R).
 
+/******************************************************************************/
+/*                                   1.d)                                     */
 /**
   @form listSum(l, S)
     @constraints

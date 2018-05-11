@@ -8,7 +8,7 @@
 *                             Práctica 5: Prolog                               *
 *                                                                              *
 *  Objetivos y Anotaciones                                                     *
-*     Mejorar el manejo el lenguaje de programación PROLOG.                    *
+*     Mejorar el manejo del lenguaje de programación PROLOG.                   *
 *                                                                              *
 *  Profesor: Pilar Selene Linares Arévalo                                      *
 *  Ayudante: Daniela Calderón Pérez                                            *
@@ -25,7 +25,7 @@
   @author Cortés López Jorge Francisco
   @author López Arias Victor Ulises
   @author Sainz Takata Izumi María
-  @date 26/04/2018
+  @date 11/05/2018
 */
 
 /*******************************************************************************
