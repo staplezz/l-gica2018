@@ -55,6 +55,20 @@ pop([], []).
 pop([_|L], L).
 
 /**
+  @form append(l1, l2, L)
+    @constraints
+      <ul>
+        <li>l1 es una lista</li>
+        <li>l2 es una lista</li>
+        <li>L es una lista</li>
+      </ul>
+   @descr Realiza la concatenación de dos listas.
+*/
+append([], L, L).
+append(L, [], L).
+append([H|T], L, [H|R]) :- append(T, L, R).
+
+/**
   @form listSum(l, S)
     @constraints
       <ul>
@@ -65,8 +79,6 @@ pop([_|L], L).
 */
 listSum([], S) :- S = 0.
 listSum([H|T], S1) :-  integer(H), listSum(T, S2), S1 is H + S2.
-
-
 
 /*******************************************************************************
 *  Fin Ejercicio1.pl                                                           *

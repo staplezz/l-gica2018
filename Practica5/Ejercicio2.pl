@@ -17,6 +17,16 @@
 *                                                                              *
 *******************************************************************************/
 
+***
+  @descr <p> Programa para realizar el ejercicio 2 de la practica 5.</p>
+    <ul>
+      <li> Ver P05.pdf </li>
+    </ul>
+  @author Cortés López Jorge Francisco
+  @author López Arias Victor Ulises
+  @author Sainz Takata Izumi María
+  @date 26/04/2018
+*/
 
 /*******************************************************************************
 *  Fin Ejercicio2.pl                                                           *
