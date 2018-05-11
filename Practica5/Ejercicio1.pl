@@ -22,9 +22,9 @@
     <ul>
       <li> Ver P05.pdf </li>
     </ul>
-  @author Cortés López Jorge Francisco
   @author López Arias Victor Ulises
   @author Sainz Takata Izumi María
+  @author Cortés López Jorge Francisco
   @date 11/05/2018
 */
 
