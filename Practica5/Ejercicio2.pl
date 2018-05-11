@@ -137,7 +137,7 @@ acepta_meta_aux([X|L], Q, S, M) :-
         <li>M es una lista de transiciones</li>
       </ul>
    @descr Definimos una función que nos regresa una lista de transiciones delta
-          en M cuando el autómata acepta la cadena C.
+          M cuando el autómata acepta la cadena C.
 */
 acepta_meta(C, M) :-
     inicial(Q),
