@@ -120,7 +120,7 @@ acepta([X|L], Q) :-
         <li>S es una lista de transiciones</li>
         <li>M es una lista de transiciones</li>
       </ul>
-   @descr Auxiliar de @acepta_meta que realmente hace todo el trabajo.
+   @descr Auxiliar de @acepta_meta/2 que realmente hace todo el trabajo.
 */
 acepta_meta_aux([], Q, S, M) :- final(Q), reverse(S,M).
 
